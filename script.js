@@ -1,7 +1,23 @@
 /*create a level screen*/
 function createMode(el) {
+    if (!document.querySelector('.page__main-list')) {
+        const mainContainer = document.querySelector('.page__main-container');
+        const winWindow = document.querySelector('.page__main-win-window');
+    
+        winWindow.remove();
+
+        const list = document.createElement('ul');
+        list.classList.add('page__main-list');
+        mainContainer.appendChild(list);
+    }
+
     const actualList = document.querySelector('.page__main-list');
     let elements = document.querySelectorAll('.page__btn');
+    const mobileEl = document.querySelectorAll('.is-active');
+
+    mobileEl.forEach(element => {
+        element.classList.remove('is-active');
+    });
 
     elements.forEach(element => {
         element.classList.remove('active');
@@ -67,7 +83,7 @@ function addNewCard(num) {
 function openImg(el) {
     const openImg = document.querySelectorAll('.is-open');
     const numItem = document.querySelectorAll('.page__main-item');
-    
+
     let num = 2;
 
     if (numItem.length === 25) {
@@ -85,12 +101,24 @@ function openImg(el) {
         el.target.classList.add('is-open');
     } else {
         el.target.classList.add('is-open');
+
+        removeClassOpenImg(num);
     }
 
     foundImg(num);
     fixationFoundItem();
 }
 
+function removeClassOpenImg(num) {
+    const newOpenImg = document.querySelectorAll('.is-open');
+    const foundImg = document.querySelectorAll('.found');
+
+    if (newOpenImg.length === num && foundImg !== num) {
+        setTimeout(() => newOpenImg.forEach(element => {
+            element.classList.remove('is-open');
+        }), 1000)
+    }
+}
 /*remove list level screen, mix item in list, add item in list screen*/
 function removeList() {
     const actualList = document.querySelector('.page__main-list');
@@ -99,17 +127,17 @@ function removeList() {
 }
 function mixList() {
     let actualItemsList = document.querySelectorAll('.page__main-item');
-    
+
     let newItemList = {};
     let keys = Object.keys(actualItemsList);
-    
+
     keys.sort(() => Math.random() - 0.5);
 
     keys.forEach((i, ind) => {
         newItemList[i] = actualItemsList[ind];
         ind++;
     });
-    
+
     return newItemList;
 }
 function addItem() {
@@ -117,9 +145,9 @@ function addItem() {
     let newActualList = mixList();
     removeList();
 
-    console.log(typeof(newActualList));
+    console.log(typeof (newActualList));
 
-    for(key in newActualList) {
+    for (key in newActualList) {
         actualList.appendChild(newActualList[key]);
     }
 }
@@ -159,10 +187,8 @@ function createMediumMode() {
 
         if (actualItemsLength < 16 - 1) {
             addNewCard(3);
-            console.log(actualItems);
         } else {
             addNewCard(1);
-            console.log(actualItems);
         }
     }
     mixList();
@@ -178,16 +204,14 @@ function createLightMode() {
 
     for (let i = actualItemsLength; i < 9; i += 2) {
         actualItemsLength = i;
-        
+
         if (actualItemsLength < 9 - 1) {
             addNewCard(2);
-            console.log(actualItemsLength);
         } else {
             addNewCard(1);
-            console.log(actualItemsLength);
         }
     }
-    
+
     mixList();
     addItem();
 }
@@ -200,13 +224,13 @@ function foundImg(num) {
 
     newListOpenImg.forEach((el) => {
         newListOpenImg.forEach((item) => {
-            if (el.firstChild.attributes.src.nodeValue === item.firstChild.attributes.src.nodeValue &&newListOpenImg.length > 1) {
-            counter++;
+            if (el.firstChild.attributes.src.nodeValue === item.firstChild.attributes.src.nodeValue && newListOpenImg.length > 1) {
+                counter++;
             }
         })
     })
 
-    if(counter / num === num) {
+    if (counter / num === num) {
         newListOpenImg.forEach((el) => {
             el.classList.add('found');
         })
@@ -220,9 +244,9 @@ function fixationFoundItem() {
         el.removeEventListener('click', openImg);
     })
 
-    if(foundItem.length === actualItemsList.length - 1) {
+    if (foundItem.length === actualItemsList.length - 1) {
         actualItemsList.forEach((el) => {
-            if(!el.classList.contains('.found')) {
+            if (!el.classList.contains('.found')) {
                 el.removeEventListener('click', openImg);
                 el.classList.add('found')
             }
@@ -239,7 +263,7 @@ function showWinWindow() {
     const listItems = document.querySelector('.page__main-list');
     const modeLevel = localStorage.getItem('mode');
 
-    if(foundItem.length === actualItemsList.length) {
+    if (foundItem.length === actualItemsList.length) {
         listItems.remove();
 
         const winWindow = document.createElement('div');
@@ -266,8 +290,7 @@ function createList() {
     const winWindow = document.querySelector('.page__main-win-window');
     let activeBtn = document.querySelector('.active');
 
-    console.log(activeBtn)
-
+    console.log(activeBtn);
     winWindow.remove();
 
     const list = document.createElement('ul');
@@ -277,8 +300,18 @@ function createList() {
     createMode(activeBtn);
 }
 
+/*============add class for burger================*/
 
+function toggelClass() {
+    let nameClass = document.querySelectorAll(".header__burger, .page__header-list");
+    let pageScroll = document.querySelectorAll(".page");
 
+    pageScroll.forEach(element => { element.classList.toggle('lock') })
+
+    nameClass.forEach(element => {
+        return element.classList.toggle('is-active');
+    });
+}
 
 
 
